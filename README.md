@@ -1,2 +1,2 @@
 # DNS Resolver
-DNS resolver with simple capabiliies written in C 
+DNS resolver with simple capabiliies written in Python
