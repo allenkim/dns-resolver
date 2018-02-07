@@ -2,6 +2,8 @@
 import argparse
 import dns.message
 import dns.query
+from time import localtime, strftime
+from timeit import default_timer as timer
 
 # Function to contact root server, then top level domain, then name server
 def query_server(domain, typ, trace=False):
@@ -23,32 +25,43 @@ def query_server(domain, typ, trace=False):
     )
     query = dns.message.make_query(domain, typ)
     servers = root_servers
+    total_time = 0
+    output = ""
     if not trace:
-        print("QUESTION SECTION:")
-        print(query.question[0].to_text())
-        print()
-        print("ANSWER SECTION:")
+        output += "QUESTION SECTION:\n"
+        output += query.question[0].to_text()
+        output += "\n\nANSWER SECTION:\n"
     while True:
         resp = None
         for server in servers:
             try:
+                start_time = timer()
                 resp = dns.query.udp(query, server, timeout=2.0)
+                end_time = timer()
+                total_time += end_time - start_time
                 break
             except:
                 continue
         if not resp:
+            print("Something crazy happened! All servers are down!")
             return
         if resp.answer:
-            print(resp.answer[0])
+            output += resp.answer[0].to_text() + '\n'
             if resp.answer[0].rdtype == dns.rdatatype.CNAME:
                 domain = resp.answer[0][0].target
                 query = dns.message.make_query(domain, typ)
                 servers = root_servers
                 continue
+            if not trace:
+                output += '\n'
+                output += "Query time: {} msec\n".format(int(total_time*1000))
+                output += "WHEN: {}\n".format(strftime("%a %b %-d %H:%M:%S %Y"))
+                output += "MSG SIZE rcvd: {}".format(len(resp.to_wire()))
+            print(output)
             return
         if resp.additional:
             if trace:
-                print(resp.authority[0].to_text())
+                output += resp.authority[0].to_text() + '\n'
             rrset = resp.additional
             ns_servers = []
             for rr in rrset:
@@ -56,6 +69,11 @@ def query_server(domain, typ, trace=False):
                     ns_servers.append(rr[0].address)
             servers = ns_servers
         else:
+            if not trace:
+                output += "Query time: {} msec\n".format(total_time)
+                output += "WHEN: {}\n".format(strftime("%a %b %-d %H:%M:%S %Y"))
+                output += "MSG SIZE rcvd: {}".format(len(resp.to_wire()))
+            print(output)
             return
 
 def main():
