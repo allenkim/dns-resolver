@@ -166,7 +166,7 @@ def query_server(domain, typ, dnssec=False, trace=False, simple=False):
                 except:
                     dnskey_resp = None
                 if trace:
-                    output += ns.to_text() + '\n'
+                    print(ns.to_text())
                 if resp.additional:
                     for radd in resp.additional:
                         if radd.rdtype == dns.rdatatype.A:
