@@ -179,6 +179,7 @@ def query_server(domain, typ, dnssec=False, trace=False, simple=False):
             if ns_servers:
                 servers = ns_servers
                 continue
+            break
     end_time = timer()
     total_time += end_time - start_time
     if not trace and not simple:
