@@ -120,11 +120,11 @@ def query_server(domain, typ, dnssec=False, trace=False, simple=False):
                 servers = root_servers
                 continue
             typ_idx = find_rdtype(resp.answer, dns.rdatatype.from_text(typ))
-            rrsig_idx = find_rdtype(resp.answer, dns.rdatatype.RRSIG)
             if typ_idx != -1 and simple:
                 output += resp.answer[typ_idx][0].address
                 return output
             if dnssec:
+                rrsig_idx = find_rdtype(resp.answer, dns.rdatatype.RRSIG)
                 rrset = resp.answer[typ_idx]
                 rrsetsig = resp.answer[rrsig_idx]
                 try:
@@ -144,6 +144,8 @@ def query_server(domain, typ, dnssec=False, trace=False, simple=False):
                 nsec3_idx = find_rdtype(resp.authority, dns.rdatatype.NSEC3)
                 rrsig_idx = find_rdtype(resp.authority, dns.rdatatype.RRSIG)
                 if nsec3_idx != -1:
+                    if trace:
+                        print("NSEC3 record found")
                     return "DNSSEC not supported"
                 else:
                     ds = resp.authority[ds_idx]
@@ -196,8 +198,13 @@ def main():
             help='enable DNSSEC in query')
     parser.add_argument('-T', dest='trace', action='store_true',
             help='trace name from the root down')
+    parser.add_argument('-S', dest='simple', action='store_true',
+            help='simple mode - only prints address, type must be A')
     args = parser.parse_args()
-    info = query_server(args.name,args.type,args.dnssec,args.trace)
+    if args.simple and args.type != 'A':
+        print("Type must be A when using simple")
+        return
+    info = query_server(args.name,args.type,args.dnssec,args.trace,args.simple)
     print(info)
 
 if __name__ == "__main__":
