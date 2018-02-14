@@ -64,7 +64,7 @@ google.co.jp. IN A
 ANSWER SECTION:
 google.co.jp. 300 IN A 172.217.9.227
 
-Query time: 724 msec
+Query time: 313 msec
 WHEN: Tue Feb 13 16:09:47 2018
 MSG SIZE rcvd: 46
 ```
