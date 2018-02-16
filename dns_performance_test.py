@@ -59,9 +59,11 @@ def main():
         "google.co.uk",
         "google.com.br"
     ]
-    mydig_times = []
-    local_times = []
-    google_times = []
+    # Results hard coded after running the tests
+    mydig_times = [65.8, 65.4, 58.4, 307.9, 84.4, 86.7, 50.8, 155.9, 300.9, 125.7, 62.6, 50.0, 152.4, 518.4, 92.2, 71.5, 433.1, 300.4, 715.4, 538.1, 298.8, 825.0, 215.2, 135.0, 278.3]
+    local_times = [2.9,  4.1,  2.7,  25.2,  10.5, 2.9,  2.3,  4.8,   35.2,  25.7,  3.3,  2.8,  25.6,  4.5,   2.8,  4.6,  2.7,   26.0,  25.9,  26.1,  29.1,  34.4,  4.8,   4.3,   4.0]
+    google_times = [4.0,  21.0, 4.4,  6.5,   25.9, 3.9,  3.7,  19.0,  5.1,   5.3,   4.0,  3.5,  102.4, 18.7,  3.6,  3.7,  3.3,   183.3, 62.0,  155.6, 11.8,  100.1, 19.0,  18.3,  18.4]
+    """
     NUM_AVG = 10
     for i,url in enumerate(top_sites):
         a_sum = b_sum = c_sum = 0
@@ -77,11 +79,19 @@ def main():
     print(mydig_times)
     print(local_times)
     print(google_times)
-    sns.distplot(mydig_times,hist=False,kde_kws={'cumulative':True,'label':"My DNS resolver"})
-    sns.distplot(local_times,hist=False,kde_kws={'cumulative':True,'label':"Local DNS resolver"})
-    ax = sns.distplot(google_times,hist=False,kde_kws={'cumulative':True,'label':"Google's DNS resolver"})
+    """
+    A,B,C = mydig_times,local_times,google_times
+    n = np.arange(1,len(A)+1) / np.float(len(A))
+    As = np.sort(A)
+    Bs = np.sort(B)
+    Cs = np.sort(C)
+    fig, ax = plt.subplots()
+    ax.step(As,n,label="My DNS resolver")
+    ax.step(Bs,n,label="Local DNS resolver")
+    ax.step(Cs,n,label="Google's DNS resolver")
     ax.set(xlabel='Query time (ms)', ylabel='Cumulative Probability')
     ax.set_title("CDF of Query time of DNS Resolvers for the Top 25 Websites")
+    ax.legend()
     plt.show()
 
 if __name__=="__main__":
