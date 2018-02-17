@@ -85,6 +85,7 @@ def query_server(domain, typ, dnssec=False, trace=False, simple=False):
                 continue
         if not resp:
             return "Something crazy happened! All servers are down!"
+        # Handle DNSSEC related verification
         if dnssec:
             if dnskey_resp and dnskey_resp.answer:
                 dnskey = dnskey_resp.answer[0]
@@ -107,6 +108,7 @@ def query_server(domain, typ, dnssec=False, trace=False, simple=False):
             else:
                 print("DNSKEY NOT found at {}".format(curr_domain))
                 dnssec = False
+        # Handle parsing the answer in the response
         if resp.answer:
             if not simple:
                 for rans in resp.answer:
@@ -136,6 +138,7 @@ def query_server(domain, typ, dnssec=False, trace=False, simple=False):
                         print("{} record INVALID at {}".format(typ,curr_domain))
                     return "DNSSEC verification failed"
             break
+        # If no answer, look for other records like NS
         if resp.authority:
             ns_servers = []
             ns_idx = find_rdtype(resp.authority, dns.rdatatype.NS)
