@@ -1,0 +1,57 @@
+\documentclass[12pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{graphicx}
+\title{\vspace{-0.0cm}Part C - Results of Query Time Measurements}
+\date{}
+\author{Allen Kim}
+\pagenumbering{gobble}
+\begin{document}
+\maketitle
+
+
+Below, I have the actual numbers of the queries used to generate the CDF
+starting from the top website and going to the 25th ranked website. They are the results after averaging ten distinct query times.\\
+
+\begin{tabular}{c|c|c|c|c}
+Rank & Website & My resolver & Local resolver & Google's resolver \\ \hline
+1 & google.com & 65.8 & 2.9 & 4.0 \\
+2 & youtube.com & 65.4 & 4.1 & 21.0 \\
+3 & facebook.com & 58.4 & 2.7 & 4.4 \\
+4 & baidu.com & 307.9 & 25.2 & 6.5 \\
+5 & wikipedia.org & 84.4 & 10.5 & 25.9 \\
+6 & reddit.com & 86.7 & 2.9 & 3.9 \\
+7 & yahoo.com & 50.8 & 2.3 & 3.7 \\
+8 & google.co.in & 155.9 & 4.8 & 19.0 \\
+9 & qq.com & 300.9 & 35.2 & 5.1 \\
+10 & taobao.com & 125.7 & 25.7 & 5.3 \\
+11 & amazon.com & 62.6 & 3.3 & 4.0 \\
+12 & twitter.com & 50.0 & 2.8 & 3.5 \\
+13 & tmall.com & 152.4 & 25.6 & 102.4 \\
+14 & google.co.jp & 518.4 & 4.5 & 18.7 \\
+15 & live.com & 92.2 & 2.8 & 3.6 \\
+16 & instagram.com & 71.5 & 4.6 & 3.7 \\
+17 & vk.com & 433.1 & 2.7 & 3.3 \\
+18 & sohu.com & 300.4 & 26.0 & 183.3 \\
+19 & sina.com.cn & 715.4 & 25.9 & 62.0 \\
+20 & jd.com & 538.1 & 26.1 & 155.6 \\
+21 & weibo.com & 298.8 & 29.1 & 11.8 \\
+22 & 360.cn & 825.0 & 34.4 & 100.1 \\
+23 & google.de & 215.2 & 4.8 & 19.0 \\
+24 & google.co.uk & 135.0 & 4.3 & 18.3 \\
+25 & google.com.br & 278.3 & 4.0 & 18.4 \\
+\end{tabular}
+\\
+
+\begin{center}
+	\includegraphics*[scale=0.75]{part_c_graph.png}
+\end{center}
+
+
+From this, I can see that my resolver is clearly slower, and this is most likely
+due to fact that DNS resolvers employ caching to return results much faster.
+Particularly for commonly visited websites, we would expect their queries to be
+cached and would thus would not have to actually query servers for their
+response. Since we also query the same server multiple times to average the results, there will almost certainly be some cached information. The local resolver has the lowest query times, which is probably due to the fact that it is closest to us geographically. The websites that took longer to resolve such as number 22 - 360.cn - was due to the fact that the servers were most likely further away and also, additional resolutions were required. However, with proper caching, this could also be greatly sped up.
+
+
+\end{document}

@@ -1,4 +1,11 @@
-# DNSSEC Implementation Details
+\documentclass[12pt]{article}
+\usepackage[margin=1in]{geometry}
+\title{\vspace{-0.0cm}Part B - DNSSEC Implementation Details}
+\date{}
+\author{Allen Kim}
+\pagenumbering{gobble}
+\begin{document}
+\maketitle
 
 For my implementation of DNSSEC, I check in a top-down approach from the root to
 make sure everything is valid on the way. There are three main possibilities:
@@ -25,7 +32,7 @@ do this by hashing the DNSKEY in a particular format as specified by the RFC,
 and then confirming that it matches the DS record of the parent. The hashes
 are constructed by turning the records into hexadecimal digits and then
 concatenating them with the domain name, which is done by a function I wrote
-into the program. If the hashes do not match, the program raises an error
+into the program (probably there was a function I missed in the library). If the hashes do not match, the program raises an error
 that the validation failed. Otherwise, if they match, we know that the
 DNSKEY is legitimate, and we continue.
 
@@ -35,3 +42,6 @@ DS record, and thus, we can use the ZSK to verify that the RRSIG is a correct
 signature. If it is valid, we know we can trust the answer. If the program gets
 to this point, it returns the result as it normally would.
 
+
+
+\end{document}

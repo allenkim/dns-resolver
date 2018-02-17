@@ -7,6 +7,11 @@ To run the program, we can first give it executable permission to run it like an
 chmod +x mydig.py
 ```
 
+Alternatively, one can run it with python directly.
+```
+python mydig.py -h
+```
+
 ## Usage examples:
 ### Simple - just get address only
 ```
